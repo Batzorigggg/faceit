@@ -12,7 +12,8 @@ const app = express();
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('/api', async (req, res) => {
-  await prisma.user.findMany();
+  await prisma.barberShop.findMany();
+
   res.send({ message: 'Welcome to api!' });
 });
 

@@ -14,8 +14,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User { 
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  email String  @unique
-  name  String
-} 
+type Contact {
+  facebook  String
+  instagram String
+  website   String
+}
+
+model BarberShop {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  location   String
+  email      String   @unique
+  phone      Int
+  cover      String
+  contacts   Contact
+  password   String
+  type       String
+  categories String[]
+
+  @@map("barber_shop")
+}
