@@ -6,15 +6,15 @@
 import express from 'express';
 import * as path from 'path';
 import { prisma } from './lib/prisma';
-import faceitRouter from './faceit/faceitcontroller'
+import faceitRouter from './faceit/faceitcontroller';
 const app = express();
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.use('/faceit', faceitRouter)
+app.use('/faceit', faceitRouter);
 
 app.get('/api', async (req, res) => {
-  await prisma.barberShop.findMany();
+  await prisma.player.findMany();
 
   res.send({ message: 'Welcome to api!' });
 });
