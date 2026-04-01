@@ -14,23 +14,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-type Contact {
-  facebook  String
-  instagram String
-  website   String
+model Player {
+  id              String   @id @default(cuid())
+  faceitId        String   @unique
+  nickname        String
+  avatar          String?
+  skillLevel      Int?
+  elo             Int?
+
+  matches         MatchStats[]
+  analyses        Analysis[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
-model BarberShop {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  location   String
-  email      String   @unique
-  phone      Int
-  cover      String
-  contacts   Contact
-  password   String
-  type       String
-  categories String[]
+model MatchStats {
+  id          String   @id @default(cuid())
+  matchId     String   @unique
 
-  @@map("barber_shop")
+  player      Player   @relation(fields: [playerId], references: [id])
+  playerId    String
+
+  map         String
+  kills       Int
+  deaths      Int
+  assists     Int
+  kd          Float
+  hsPercent   Float
+  result      Boolean  // true = win, false = loss
+
+  createdAt   DateTime @default(now())
+}
+
+model Analysis {
+  id          String   @id @default(cuid())
+
+  player      Player   @relation(fields: [playerId], references: [id])
+  playerId    String
+
+  score       Int
+  playerType  String
+  summary     String
+
+  // store issues as JSON (flexible)
+  issues      Json
+
+  createdAt   DateTime @default(now())
 }
