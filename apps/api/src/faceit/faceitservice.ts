@@ -1,38 +1,42 @@
-const BASE_URL = "https://open.faceit.com/data/v4"
+const BASE_URL = 'https://open.faceit.com/data/v4';
 
 const headers = {
-    Authorization: `Bearer ${process.env.FACEIT_API_KEY}`,
-}
+  Authorization: `Bearer ${process.env.FACEIT_API_KEY}`,
+};
 
 export class FaceitService {
-    async getPlayer(nickname: string) {
-        const res = await fetch(`${BASE_URL}/players?nickname=${nickname}`, {
-            headers,
-        })
+  async getPlayer(nickname: string) {
+    const res = await fetch(`${BASE_URL}/players?nickname=${nickname}`, {
+      headers,
+    });
 
-        if (!res.ok) throw new Error("Player not found")
+    const data = await res.json();
 
-        return res.json()
+    if (!res.ok) {
+      throw new Error(data.errors?.[0]?.message || 'Player not found');
     }
 
-    async getMatchHistory(playerId: string) {
-        const res = await fetch(
-            `${BASE_URL}/players/${playerId}/history?game=cs2&limit=10`,
-            { headers }
-        )
+    return data;
+  }
 
-        if (!res.ok) throw new Error("Failed to fetch matches")
+  async getMatchHistory(playerId: string) {
+    const res = await fetch(
+      `${BASE_URL}/players/${playerId}/history?game=cs2&limit=10`,
+      { headers }
+    );
 
-        return res.json()
-    }
+    if (!res.ok) throw new Error('Failed to fetch matches');
 
-    async getMatchStats(matchId: string) {
-        const res = await fetch(`${BASE_URL}/matches/${matchId}/stats`, {
-            headers,
-        })
+    return res.json();
+  }
 
-        if (!res.ok) throw new Error("Failed to fetch match stats")
+  async getMatchStats(matchId: string) {
+    const res = await fetch(`${BASE_URL}/matches/${matchId}/stats`, {
+      headers,
+    });
 
-        return res.json()
-    }
+    if (!res.ok) throw new Error('Failed to fetch match stats');
+
+    return res.json();
+  }
 }
